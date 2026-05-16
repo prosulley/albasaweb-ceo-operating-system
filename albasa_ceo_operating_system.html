@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALBASA WEB — CEO Operating System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Lora:ital,wght@0,500;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css">
+<style>
+  /* ── Design tokens ───────────────────────────────────────────── */
+  :root {
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Lora', Georgia, serif;
+
+    --color-text-primary:    #0f172a;
+    --color-text-secondary:  #475569;
+    --color-text-tertiary:   #94a3b8;
+
+    --color-bg-page:         #0b1120;
+    --color-bg-primary:      #ffffff;
+    --color-bg-secondary:    #f8fafc;
+
+    --color-border-strong:   rgba(15,23,42,0.15);
+    --color-border-mid:      rgba(15,23,42,0.09);
+    --color-border-soft:     rgba(15,23,42,0.05);
+
+    --radius-sm:  7px;
+    --radius-md: 11px;
+    --radius-lg: 16px;
+    --radius-xl: 20px;
+
+    --shadow-xs:  0 1px 2px rgba(15,23,42,0.06);
+    --shadow-sm:  0 2px 8px rgba(15,23,42,0.08), 0 1px 2px rgba(15,23,42,0.04);
+    --shadow-md:  0 4px 16px rgba(15,23,42,0.10), 0 1px 4px rgba(15,23,42,0.06);
+    --shadow-lg:  0 24px 64px rgba(0,0,0,0.55), 0 4px 16px rgba(0,0,0,0.30), 0 0 0 1px rgba(255,255,255,0.06);
+
+    /* brand ramps */
+    --blue:        #1a63ad;
+    --blue-mid:    #2478cc;
+    --blue-light:  #deeefb;
+    --blue-xlight: #f0f7fe;
+    --blue-dark:   #0c3f75;
+    --teal:        #0e7259;
+    --teal-light:  #d4f0e7;
+    --teal-xlight: #edfaf5;
+    --teal-dark:   #075040;
+    --amber:       #b87316;
+    --amber-light: #faecd5;
+    --amber-xlight:#fef8ed;
+    --amber-dark:  #5e3406;
+    --coral:       #9a3b1b;
+    --coral-light: #fae5de;
+    --coral-xlight:#fef3ef;
+    --coral-dark:  #4a1a0c;
+    --green:       #3a6d10;
+    --green-light: #e3f0d8;
+    --green-dark:  #265009;
+    --gray-light:  #f0ede6;
+    --gray-dark:   #3f3e3b;
+  }
+
+  /* ── Reset ───────────────────────────────────────────────────── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── Page shell ──────────────────────────────────────────────── */
+  body {
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.65;
+    color: var(--color-text-primary);
+    background: var(--color-bg-page);
+    background-image:
+      radial-gradient(ellipse 70% 50% at 50% -5%, rgba(36,120,204,0.18) 0%, transparent 65%),
+      radial-gradient(ellipse 40% 30% at 80% 90%, rgba(14,114,89,0.10) 0%, transparent 60%);
+    min-height: 100vh;
+    padding: 2.5rem 1rem 5rem;
+  }
+
+  .page-wrap {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--color-bg-primary);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border-mid);
+    box-shadow: var(--shadow-lg);
+    padding: 2.25rem 2.5rem 2.75rem;
+  }
+
+  /* ── Accessibility ───────────────────────────────────────────── */
+  .sr-only {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+  }
+
+  /* ── Hero banner ─────────────────────────────────────────────── */
+  .hero {
+    padding: 1.4rem 1.75rem;
+    background: linear-gradient(135deg, var(--blue-xlight) 0%, var(--blue-light) 100%);
+    border-radius: var(--radius-lg);
+    border: 1px solid rgba(26,99,173,0.18);
+    box-shadow: var(--shadow-xs), inset 0 1px 0 rgba(255,255,255,0.8);
+    margin-bottom: 1.75rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    background: radial-gradient(circle, rgba(26,99,173,0.10) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: .10em;
+    text-transform: uppercase;
+    color: var(--blue-dark);
+    margin-bottom: 5px;
+    opacity: 0.75;
+  }
+  .hero-desc {
+    font-size: 13.5px;
+    color: var(--blue-dark);
+    line-height: 1.6;
+    font-weight: 450;
+  }
+
+  /* ── Tabs ────────────────────────────────────────────────────── */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+    border-bottom: 1.5px solid var(--color-border-mid);
+    padding-bottom: 0;
+    margin-bottom: 1.75rem;
+  }
+  .tab {
+    font-size: 12.5px;
+    font-family: var(--font-sans);
+    font-weight: 500;
+    padding: 8px 15px;
+    border: 1.5px solid transparent;
+    border-bottom: none;
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    cursor: pointer;
+    color: var(--color-text-tertiary);
+    background: transparent;
+    transition: background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    user-select: none;
+    position: relative;
+    bottom: -1.5px;
+    letter-spacing: 0.01em;
+  }
+  .tab:hover {
+    background: var(--blue-xlight);
+    color: var(--blue);
+    border-color: var(--color-border-mid);
+  }
+  .tab.active {
+    background: var(--color-bg-primary);
+    border-color: var(--color-border-mid);
+    border-bottom-color: var(--color-bg-primary);
+    color: var(--blue);
+    font-weight: 600;
+    box-shadow: 0 -2px 6px rgba(15,23,42,0.06);
+  }
+  .tab i { font-size: 15px; opacity: 0.85; }
+
+  /* ── Panel animation ─────────────────────────────────────────── */
+  .panel { display: none; }
+  .panel.active {
+    display: block;
+    animation: fadeSlideIn .22s ease both;
+  }
+  @keyframes fadeSlideIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to   { opacity: 1; transform: translateY(0);   }
+  }
+
+  /* ── Section label ───────────────────────────────────────────── */
+  .lbl {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    color: var(--color-text-tertiary);
+    margin-bottom: .75rem;
+    margin-top: 1.6rem;
+  }
+  .lbl:first-child { margin-top: 0; }
+
+  /* ── Cards ───────────────────────────────────────────────────── */
+  .card {
+    background: var(--color-bg-primary);
+    border: 1px solid var(--color-border-mid);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-sm);
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 1rem;
+    transition: box-shadow .2s ease;
+  }
+  .card:hover { box-shadow: var(--shadow-md); }
+
+  .card-accent-blue {
+    border-left: 3px solid var(--blue);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    background: linear-gradient(to right, var(--blue-xlight) 0%, var(--color-bg-primary) 60%);
+  }
+  .card-accent-teal {
+    border-left: 3px solid var(--teal);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    background: linear-gradient(to right, var(--teal-xlight) 0%, var(--color-bg-primary) 60%);
+  }
+  .card-accent-amber {
+    border-left: 3px solid var(--amber);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    background: linear-gradient(to right, var(--amber-xlight) 0%, var(--color-bg-primary) 60%);
+  }
+  .card-accent-coral {
+    border-left: 3px solid var(--coral);
+    border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    background: linear-gradient(to right, var(--coral-xlight) 0%, var(--color-bg-primary) 60%);
+  }
+
+  /* ── Pills ───────────────────────────────────────────────────── */
+  .pill {
+    display: inline-block;
+    font-size: 11px;
+    padding: 3px 11px;
+    border-radius: 100px;
+    font-weight: 600;
+    margin: 2px;
+    white-space: nowrap;
+    letter-spacing: 0.01em;
+  }
+  .pb { background: var(--blue-light);  color: var(--blue-dark);  box-shadow: inset 0 0 0 1px rgba(26,99,173,0.15); }
+  .pt { background: var(--teal-light);  color: var(--teal-dark);  box-shadow: inset 0 0 0 1px rgba(14,114,89,0.15);  }
+  .pa { background: var(--amber-light); color: var(--amber-dark); box-shadow: inset 0 0 0 1px rgba(184,115,22,0.15); }
+  .pc { background: var(--coral-light); color: var(--coral-dark); box-shadow: inset 0 0 0 1px rgba(154,59,27,0.15);  }
+  .pg { background: var(--green-light); color: var(--green-dark); box-shadow: inset 0 0 0 1px rgba(58,109,16,0.15);  }
+  .pp { background: var(--gray-light);  color: var(--gray-dark);  box-shadow: inset 0 0 0 1px rgba(64,62,59,0.12);   }
+
+  /* ── Row items ───────────────────────────────────────────────── */
+  .row {
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--color-border-soft);
+    transition: background .15s;
+  }
+  .row:last-child { border-bottom: none; padding-bottom: 0; }
+  .row-icon {
+    font-size: 18px;
+    color: var(--blue);
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--blue-xlight);
+    border-radius: var(--radius-sm);
+    margin-top: 1px;
+    box-shadow: var(--shadow-xs);
+  }
+  .row-icon.muted { color: var(--color-text-tertiary); background: var(--color-bg-secondary); }
+  .row-icon.teal  { color: var(--teal);  background: var(--teal-xlight);  }
+  .row-icon.amber { color: var(--amber); background: var(--amber-xlight); }
+  .row-icon.coral { color: var(--coral); background: var(--coral-xlight); }
+  .row-body h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 5px;
+    line-height: 1.4;
+  }
+  .row-body p {
+    font-size: 13px;
+    color: var(--color-text-secondary);
+    line-height: 1.65;
+    margin: 0;
+  }
+
+  /* ── Metric grid ─────────────────────────────────────────────── */
+  .metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+    gap: 12px;
+    margin-bottom: 1.5rem;
+  }
+  .mc {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-mid);
+    border-radius: var(--radius-lg);
+    padding: 1.1rem 1.2rem;
+    box-shadow: var(--shadow-xs);
+    transition: transform .18s ease, box-shadow .18s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .mc::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--blue), var(--blue-mid));
+    opacity: 0;
+    transition: opacity .18s;
+  }
+  .mc:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); }
+  .mc:hover::after { opacity: 1; }
+  .mc-lbl { font-size: 11.5px; color: var(--color-text-tertiary); margin-bottom: 6px; font-weight: 500; }
+  .mc-val { font-size: 24px; font-weight: 700; line-height: 1.1; letter-spacing: -0.02em; }
+  .mc-sub { font-size: 11px; color: var(--color-text-tertiary); margin-top: 5px; }
+
+  /* ── Schedule blocks ─────────────────────────────────────────── */
+  .day-block {
+    background: var(--color-bg-secondary);
+    border: 1px solid var(--color-border-mid);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    margin-bottom: .75rem;
+    box-shadow: var(--shadow-xs);
+    transition: box-shadow .18s;
+  }
+  .day-block:hover { box-shadow: var(--shadow-sm); }
+  .day-name {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--blue);
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+  }
+  .day-name i {
+    font-size: 14px;
+    background: var(--blue-light);
+    padding: 3px;
+    border-radius: 5px;
+  }
+  .time-row {
+    display: grid;
+    grid-template-columns: 92px 1fr;
+    gap: 10px;
+    font-size: 13px;
+    margin-bottom: 7px;
+    line-height: 1.5;
+    align-items: baseline;
+  }
+  .time-row:last-child { margin-bottom: 0; }
+  .time-slot {
+    color: var(--color-text-tertiary);
+    font-variant-numeric: tabular-nums;
+    font-size: 11.5px;
+    font-weight: 600;
+    padding-top: 1px;
+    white-space: nowrap;
+  }
+  .time-act { color: var(--color-text-secondary); }
+
+  /* ── Decision boxes ──────────────────────────────────────────── */
+  .decision-box {
+    border: 1px solid var(--color-border-mid);
+    border-radius: var(--radius-md);
+    padding: .9rem 1.1rem;
+    margin-bottom: .65rem;
+    background: var(--color-bg-secondary);
+    box-shadow: var(--shadow-xs);
+    transition: box-shadow .18s;
+  }
+  .decision-box:last-child { margin-bottom: 0; }
+  .decision-box:hover { box-shadow: var(--shadow-sm); }
+  .d-q { font-size: 13.5px; font-weight: 600; margin-bottom: 10px; color: var(--color-text-primary); }
+  .d-opts { display: flex; gap: 8px; flex-wrap: wrap; }
+  .d-opt {
+    font-size: 12px;
+    font-weight: 500;
+    padding: 5px 13px;
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--color-border-mid);
+    color: var(--color-text-secondary);
+    background: var(--color-bg-primary);
+    box-shadow: var(--shadow-xs);
+    transition: transform .15s;
+  }
+  .d-opt:hover { transform: translateY(-1px); }
+
+  /* ── KPI table rows ──────────────────────────────────────────── */
+  .kpi-row {
+    display: grid;
+    grid-template-columns: 1fr 115px 76px;
+    gap: 10px;
+    font-size: 13px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-border-soft);
+    align-items: center;
+    transition: background .15s;
+  }
+  .kpi-row:not(.kpi-header):hover {
+    background: var(--color-bg-secondary);
+    margin: 0 -8px;
+    padding-left: 8px;
+    padding-right: 8px;
+    border-radius: var(--radius-sm);
+  }
+  .kpi-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .kpi-header {
+    font-size: 10.5px;
+    color: var(--color-text-tertiary);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    padding-bottom: 8px;
+    border-bottom: 1.5px solid var(--color-border-mid);
+  }
+  .kpi-sub { font-size: 11.5px; color: var(--color-text-tertiary); margin-top: 2px; }
+
+  /* ── Pull-quote / serif highlight ───────────────────────────── */
+  .pull-quote {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 16.5px;
+    font-weight: 400;
+    color: var(--color-text-primary);
+    background: var(--blue-xlight);
+    border-left: 3px solid var(--blue);
+    border-radius: 0 var(--radius-md) var(--radius-md) 0;
+    padding: .8rem 1.2rem .8rem 1.3rem;
+    margin: .85rem 0;
+    line-height: 1.65;
+    box-shadow: var(--shadow-xs);
+  }
+
+  /* ── Print ───────────────────────────────────────────────────── */
+  @media print {
+    body { background: #fff; padding: 0; }
+    .page-wrap { border: none; border-radius: 0; padding: 1rem; box-shadow: none; }
+    .tabs { display: none; }
+    .panel { display: block !important; page-break-inside: avoid; }
+    .panel + .panel { margin-top: 2rem; border-top: 1px solid #ddd; padding-top: 1.5rem; }
+  }
+
+  /* ── Responsive ──────────────────────────────────────────────── */
+  @media (max-width: 600px) {
+    body { padding: 0; background-image: none; }
+    .page-wrap { border-radius: 0; border: none; padding: 1.5rem 1.1rem 2.5rem; box-shadow: none; }
+    .tabs { gap: 3px; }
+    .tab { font-size: 12px; padding: 7px 10px; }
+    .kpi-row { grid-template-columns: 1fr 95px; }
+    .kpi-row > div:last-child { display: none; }
+    .metric-grid { grid-template-columns: 1fr 1fr; }
+    .row-icon { width: 24px; height: 24px; font-size: 15px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+<h2 class="sr-only">ALBASA WEB CEO Operating System — how Suleman should structure and direct the company as a lean startup CEO</h2>
+
+<div class="hero">
+  <div class="hero-label">CEO Operating System — ALBASA WEB</div>
+  <div class="hero-desc">How Suleman, as CEO, structures his time, decisions, priorities, and company direction — for a lean two-person Ghanaian software startup.</div>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="show('role', this)"><i class="ti ti-crown"></i> Your role</div>
+  <div class="tab" onclick="show('time', this)"><i class="ti ti-clock"></i> Time structure</div>
+  <div class="tab" onclick="show('decisions', this)"><i class="ti ti-git-branch"></i> Decisions</div>
+  <div class="tab" onclick="show('kpis', this)"><i class="ti ti-chart-bar"></i> KPIs</div>
+  <div class="tab" onclick="show('founders', this)"><i class="ti ti-users"></i> Co-founder sync</div>
+  <div class="tab" onclick="show('traps', this)"><i class="ti ti-alert-triangle"></i> CEO traps</div>
+</div>
+
+<!-- ══ PANEL: Role ═══════════════════════════════════════════════ -->
+<div id="role" class="panel active">
+  <div class="lbl">The startup CEO's one true job</div>
+  <div class="card card-accent-blue" style="margin-bottom:1rem">
+    <p style="font-size:15px;font-weight:500;margin-bottom:6px">Make sure ALBASA WEB does not run out of money, clients, or momentum.</p>
+    <p style="font-size:13px;color:var(--color-text-secondary)">Everything else — the code, the designs, the server configs — flows from that. Your PMP and operations background already wires you for this. Now apply it to directing a company, not a project.</p>
+  </div>
+
+  <div class="lbl">Your three irreplaceable CEO functions</div>
+  <div class="card">
+    <div class="row">
+      <div class="row-icon"><i class="ti ti-target" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Set direction — and repeat it until everyone is tired of hearing it</h4>
+        <p>You decide the sectors ALBASA targets, the services you offer, the clients you pursue, and the ones you decline. Every quarter, you produce a one-page company direction memo (not a slide deck — a memo). "This quarter we are closing 3 law firm retainers and building Siri Stores v2." Write it. Share it. Revisit it weekly.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon"><i class="ti ti-coin" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Control cash — know your runway at all times</h4>
+        <p>As CEO you must always know: how much cash is in the account, what is owed to you (receivables), what you owe others (payables), and how many months you can survive with zero new revenue. That number is your runway. If it drops below 2 months — that is a CEO emergency, not a Mubarak problem.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon"><i class="ti ti-handshake" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Own the client relationship — from discovery to renewal</h4>
+        <p>You run every discovery call. You write or approve every proposal. You sign every contract. You handle escalations. You make the renewal call at month 5 of a 6-month retainer. Mubarak builds excellent things. You make sure a human being on the other end values and pays for those things.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lbl">What you do NOT do as CEO (delegate or drop)</div>
+  <div class="card">
+    <div class="row">
+      <div class="row-icon muted"><i class="ti ti-x" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Write code on client projects</h4>
+        <p>Exception: internal tools for ALBASA itself. Once you have a developer, your hands leave client code. If you are both selling and building, you will do neither well.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon muted"><i class="ti ti-x" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Make technical architecture decisions</h4>
+        <p>Which database, which hosting, which framework — Mubarak decides. You ask one question: "Can we deliver it in the timeline we promised the client?" If yes, trust the CTO. That is his domain.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon muted"><i class="ti ti-x" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Answer every WhatsApp message yourself</h4>
+        <p>Set up WhatsApp Business auto-replies. Route inquiries to a Google Form intake. Then triage — only you respond to clients already in contract or high-value prospects. Everything else goes to a template or your future BD rep.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL: Time ════════════════════════════════════════════════ -->
+<div id="time" class="panel">
+  <div class="lbl">The CEO's weekly time budget — 40 productive hours</div>
+  <div class="metric-grid">
+    <div class="mc">
+      <div class="mc-lbl">Client &amp; sales time</div>
+      <div class="mc-val" style="color:var(--blue)">40%</div>
+      <div class="mc-sub">~16 hrs/week</div>
+    </div>
+    <div class="mc">
+      <div class="mc-lbl">Delivery oversight</div>
+      <div class="mc-val" style="color:var(--teal)">25%</div>
+      <div class="mc-sub">~10 hrs/week</div>
+    </div>
+    <div class="mc">
+      <div class="mc-lbl">Company building</div>
+      <div class="mc-val" style="color:var(--amber)">20%</div>
+      <div class="mc-sub">~8 hrs/week</div>
+    </div>
+    <div class="mc">
+      <div class="mc-lbl">Learning &amp; strategy</div>
+      <div class="mc-val" style="color:var(--coral)">15%</div>
+      <div class="mc-sub">~6 hrs/week</div>
+    </div>
+  </div>
+
+  <div class="lbl">Your ideal weekly schedule template</div>
+
+  <div class="day-block">
+    <div class="day-name"><i class="ti ti-calendar" aria-hidden="true"></i>Monday — Direction day</div>
+    <div class="time-row"><div class="time-slot">7:00–8:00</div><div class="time-act">Weekly review: check cash position, review HubSpot pipeline, read last week's client notes</div></div>
+    <div class="time-row"><div class="time-slot">8:00–8:30</div><div class="time-act">Founder sync with Mubarak: 3 things each — what's stuck, what's shipping this week, what needs CEO input</div></div>
+    <div class="time-row"><div class="time-slot">9:00–12:00</div><div class="time-act">Proposal writing or client discovery calls — deep work block, no interruptions</div></div>
+    <div class="time-row"><div class="time-slot">2:00–4:00</div><div class="time-act">LinkedIn outreach — 10 new connection requests with personalised notes to target sector contacts</div></div>
+    <div class="time-row"><div class="time-slot">4:00–5:00</div><div class="time-act">Follow up on all pending proposals and unanswered client messages from last week</div></div>
+  </div>
+
+  <div class="day-block">
+    <div class="day-name"><i class="ti ti-calendar" aria-hidden="true"></i>Tuesday &amp; Wednesday — Client &amp; delivery days</div>
+    <div class="time-row"><div class="time-slot">8:00–12:00</div><div class="time-act">Client calls: discovery calls, project status updates, proposals presented</div></div>
+    <div class="time-row"><div class="time-slot">12:00–1:00</div><div class="time-act">Delivery check: review active projects in VPO — are milestones on track? Any blockers Mubarak needs CEO authority to resolve?</div></div>
+    <div class="time-row"><div class="time-slot">2:00–4:00</div><div class="time-act">Contract writing, invoicing, follow-ups on payment (unpaid invoices are a CEO task — do not let them slide)</div></div>
+    <div class="time-row"><div class="time-slot">4:00–5:00</div><div class="time-act">Community: LinkedIn posts, blog draft review, event research and registration</div></div>
+  </div>
+
+  <div class="day-block">
+    <div class="day-name"><i class="ti ti-calendar" aria-hidden="true"></i>Thursday — Company building day</div>
+    <div class="time-row"><div class="time-slot">8:00–10:00</div><div class="time-act">Build internal systems: Notion SOPs, proposal templates, client onboarding checklist — document everything you do more than once</div></div>
+    <div class="time-row"><div class="time-slot">10:00–12:00</div><div class="time-act">Partnerships: reach out to potential referral partners (accountants, lawyers, real estate agents who can refer clients to you)</div></div>
+    <div class="time-row"><div class="time-slot">2:00–4:00</div><div class="time-act">Financial review: update revenue tracker in Notion, check runway, plan next month's cash needs</div></div>
+    <div class="time-row"><div class="time-slot">4:00–5:00</div><div class="time-act">HR/team: if you have a developer or intern, check in individually — not in a group setting</div></div>
+  </div>
+
+  <div class="day-block">
+    <div class="day-name"><i class="ti ti-calendar" aria-hidden="true"></i>Friday — Learning &amp; weekly close</div>
+    <div class="time-row"><div class="time-slot">8:00–9:30</div><div class="time-act">Learning: industry read — Ghana tech news, competitors, sector developments. 90 minutes max, then close the tabs</div></div>
+    <div class="time-row"><div class="time-slot">9:30–11:00</div><div class="time-act">Weekly review: what moved forward? What got stuck? Write 5 bullets in Notion. This becomes your company memory</div></div>
+    <div class="time-row"><div class="time-slot">11:00–12:00</div><div class="time-act">Plan next week: set Monday's priority list, update HubSpot deal stages, schedule any calls</div></div>
+    <div class="time-row"><div class="time-slot">2:00–4:00</div><div class="time-act">Flex: overflow from week, blog post, event attendance, or deliberate rest — protected time</div></div>
+  </div>
+
+  <div class="card card-accent-amber" style="margin-top:1.1rem">
+    <div class="lbl">The CEO's non-negotiables — protect these blocks</div>
+    <div class="row">
+      <div class="row-icon amber"><i class="ti ti-lock" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Deep work before 12pm every day</h4>
+        <p>Your highest-value thinking — proposals, strategy, client communication — happens in the morning. Never schedule admin, errands, or reactive tasks before noon. Protect this block like a contract deadline.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon amber"><i class="ti ti-lock" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Monday 8am founder sync</h4>
+        <p>30 minutes. Standing meeting. Never cancelled. This is your company's weekly nervous system. Without it, you and Mubarak operate in silos.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon amber"><i class="ti ti-lock" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Friday financial check — 15 minutes minimum</h4>
+        <p>Every Friday: open your Wave Accounting, check balances, chase one unpaid invoice, note MRR vs last week. Ignorance of your own finances is not busyness — it is a risk to the company.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL: Decisions ══════════════════════════════════════════ -->
+<div id="decisions" class="panel">
+  <div class="lbl">The CEO decision framework — how to make fast, right calls</div>
+
+  <div class="card card-accent-blue">
+    <p style="font-size:14px;font-weight:500;margin-bottom:10px">The ALBASA Decision Filter — ask these 4 questions in order</p>
+    <div class="decision-box">
+      <div class="d-q">1. Does this move us closer to signed revenue or a retainer?</div>
+      <div class="d-opts">
+        <div class="d-opt" style="border-color:var(--blue);color:var(--blue)">Yes → prioritise</div>
+        <div class="d-opt" style="border-color:var(--coral);color:var(--coral)">No → schedule or drop</div>
+      </div>
+    </div>
+    <div class="decision-box">
+      <div class="d-q">2. Is this reversible?</div>
+      <div class="d-opts">
+        <div class="d-opt" style="border-color:var(--blue);color:var(--blue)">Yes → decide fast, move on</div>
+        <div class="d-opt" style="border-color:var(--amber);color:var(--amber)">No → take 24 hours, consult Mubarak, then decide</div>
+      </div>
+    </div>
+    <div class="decision-box">
+      <div class="d-q">3. Does this require Mubarak's technical input?</div>
+      <div class="d-opts">
+        <div class="d-opt">Yes → ask him one specific question, get a yes/no, then you decide</div>
+        <div class="d-opt">No → decide alone and inform him</div>
+      </div>
+    </div>
+    <div class="decision-box">
+      <div class="d-q">4. Am I deciding this because it feels urgent or because it is actually important?</div>
+      <div class="d-opts">
+        <div class="d-opt" style="border-color:var(--amber);color:var(--amber)">Urgent-only → park in Notion, revisit Friday</div>
+        <div class="d-opt" style="border-color:var(--teal);color:var(--teal)">Important → decide now</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="lbl">Decision ownership matrix — who decides what</div>
+  <div class="card">
+    <div class="row">
+      <div class="row-icon"><i class="ti ti-user-check" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>CEO decides alone (no consultation needed)</h4>
+        <p>Pricing of any proposal. Which clients to pursue. Which clients to decline. Hiring decisions. Contract terms. Payment policy. Public communications (what you post on LinkedIn, your website). Budget allocation within agreed monthly limits.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon"><i class="ti ti-users" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>CEO + CTO decide together (discuss, then CEO has final call)</h4>
+        <p>Taking on a new type of project you've never done before. Committing to a delivery timeline on a large project. Hiring a developer. Pivoting a product feature. Entering a new sector. Signing a client with unusual or risky requirements.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon"><i class="ti ti-tool" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>CTO decides alone (inform CEO after)</h4>
+        <p>Technology stack on any project. Hosting and infrastructure choices. Code architecture. Development tools and libraries. Security implementation approach. Which bugs are critical vs. nice-to-fix.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lbl">How to handle client scope creep (your most common decision)</div>
+  <div class="card card-accent-coral">
+    <div class="row">
+      <div class="row-icon coral"><i class="ti ti-alert-triangle" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>The scope creep response — say this exact thing</h4>
+        <p>When a client asks for something outside the original scope: "That's a great addition — it's not included in our current agreement. I'll put together a quick change order for your review. It typically adds [X days] and [GHC Y]. Want me to proceed?" Never say yes or no in the moment. Always put it in writing. Your PMP training makes this natural — apply the change control process you already know.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL: KPIs ════════════════════════════════════════════════ -->
+<div id="kpis" class="panel">
+  <div class="lbl">The CEO scorecard — what you review every week</div>
+  <div class="card">
+    <div class="kpi-row kpi-header">
+      <div>Metric</div><div style="text-align:right">Target</div><div style="text-align:right">Review</div>
+    </div>
+    <div class="kpi-row">
+      <div><span style="font-weight:500">Monthly Recurring Revenue (MRR)</span><div class="kpi-sub">Retainer contracts only — not project revenue</div></div>
+      <div style="text-align:right"><span class="pill pb">GHC 20k by M6</span></div>
+      <div style="text-align:right;font-size:12px;color:var(--color-text-tertiary)">Weekly</div>
+    </div>
+    <div class="kpi-row">
+      <div><span style="font-weight:500">Cash runway</span><div class="kpi-sub">Months you can operate with zero new revenue</div></div>
+      <div style="text-align:right"><span class="pill pt">Min. 2 months</span></div>
+      <div style="text-align:right;font-size:12px;color:var(--color-text-tertiary)">Weekly</div>
+    </div>
+    <div class="kpi-row">
+      <div><span style="font-weight:500">Active proposals open</span><div class="kpi-sub">Proposals sent, awaiting client decision</div></div>
+      <div style="text-align:right"><span class="pill pa">3–5 always</span></div>
+      <div style="text-align:right;font-size:12px;color:var(--color-text-tertiary)">Weekly</div>
+    </div>
+    <div class="kpi-row">
+      <div><span style="font-weight:500">Proposal win rate</span><div class="kpi-sub">Proposals won ÷ proposals sent</div></div>
+      <div style="text-align:right"><span class="pill pc">Target 40%+</span></div>
+      <div style="text-align:right;font-size:12px;color:var(--color-text-tertiary)">Monthly</div>
+    </div>
+    <div class="kpi-row">
+      <div><span style="font-weight:500">Client retention rate</span><div class="kpi-sub">Retainer clients renewed ÷ up for renewal</div></div>
+      <div style="text-align:right"><span class="pill pg">Target 80%+</span></div>
+      <div style="text-align:right;font-size:12px;color:var(--color-text-tertiary)">Monthly</div>
+    </div>
+    <div class="kpi-row">
+      <div><span style="font-weight:500">New leads generated</span><div class="kpi-sub">Inbound + outbound contacts added to HubSpot</div></div>
+      <div style="text-align:right"><span class="pill pb">10/week</span></div>
+      <div style="text-align:right;font-size:12px;color:var(--color-text-tertiary)">Weekly</div>
+    </div>
+    <div class="kpi-row">
+      <div><span style="font-weight:500">Project on-time delivery</span><div class="kpi-sub">Projects delivered by agreed deadline</div></div>
+      <div style="text-align:right"><span class="pill pt">Target 90%+</span></div>
+      <div style="text-align:right;font-size:12px;color:var(--color-text-tertiary)">Per project</div>
+    </div>
+    <div class="kpi-row">
+      <div><span style="font-weight:500">Overdue invoices (&gt;14 days)</span><div class="kpi-sub">Invoices unpaid beyond agreed terms</div></div>
+      <div style="text-align:right"><span class="pill pc">Target: zero</span></div>
+      <div style="text-align:right;font-size:12px;color:var(--color-text-tertiary)">Weekly</div>
+    </div>
+  </div>
+
+  <div class="lbl">Your quarterly CEO review ritual — 2 hours every 90 days</div>
+  <div class="card card-accent-teal">
+    <div class="row">
+      <div class="row-icon teal"><i class="ti ti-refresh" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>The quarterly 6-question review</h4>
+        <p>Sit alone for 2 hours every 90 days and answer: (1) What was our revenue this quarter vs last? (2) Which clients renewed and which left — and why? (3) Which sector gave us the best return on time? (4) What did we build this quarter that we can reuse next quarter? (5) What decision from 90 days ago now looks wrong? (6) What should we stop doing entirely? Write it in Notion. Share with Mubarak. Update your one-page company direction memo based on the answers.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL: Founders ═══════════════════════════════════════════ -->
+<div id="founders" class="panel">
+  <div class="lbl">The co-founder operating agreement — not a legal document, a working agreement</div>
+  <div class="card card-accent-blue">
+    <p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:.9rem">Two founders with no structure will eventually step on each other's decisions, create conflicting messages to clients, and build resentment silently. This prevents that.</p>
+    <div class="row">
+      <div class="row-icon"><i class="ti ti-writing" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Write down who owns what — today, in a Notion page titled "ALBASA Operating Agreement"</h4>
+        <p>Suleman owns: client relationships, proposals, pricing, contracts, company finances, hiring, public positioning, project delivery (schedule and scope). Mubarak owns: technical architecture, code quality, security decisions, developer management, cybersecurity delivery, tool and stack choices. Both own: strategy, culture, major pivots, equity decisions.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon"><i class="ti ti-message-circle" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Weekly founder sync — 30 minutes, Monday 8am, non-negotiable</h4>
+        <p>Fixed agenda, always the same: (1) What did each of you do last week? 5 bullets each. (2) What is each blocked on? (3) What decisions need joint input this week? (4) What is the one priority each of you commits to completing before next Monday? Document it in a running Notion page. This becomes your company journal.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon"><i class="ti ti-mood-nerd" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Monthly founder retrospective — 1 hour, last Friday of each month</h4>
+        <p>Separate from the weekly sync. Bigger questions: Are we still aligned on where ALBASA is going? Is the workload distribution fair? Is there anything unsaid that needs to be said? Are we both compensating ourselves fairly? This is the meeting that prevents founder breakdowns before they happen.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon"><i class="ti ti-gavel" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Disagreement protocol — when you and Mubarak cannot agree</h4>
+        <p>Step 1: each writes their position in 3 bullets (no verbal debates — writing forces clarity). Step 2: CEO makes the final call on business decisions, CTO on technical ones. Step 3: you trial the decision for 30 days, then review together. No grudges. No "I told you so." The decision was made with the information available.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="lbl">Compensation — the conversation most founders avoid</div>
+  <div class="card card-accent-amber">
+    <div class="row">
+      <div class="row-icon amber"><i class="ti ti-cash" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Pay yourselves a fixed salary from Month 3 onward — even if it's small</h4>
+        <p>Founders who don't pay themselves create invisible debt and resentment. Agree on a minimum founder salary (e.g. GHC 3,000/month each) as soon as MRR exceeds GHC 10,000. Increase it quarterly as revenue allows. Any profit above operating costs gets split per your equity agreement. Do not live off client project payments directly — that destroys your cash flow visibility.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ PANEL: Traps ══════════════════════════════════════════════ -->
+<div id="traps" class="panel">
+  <div class="lbl">CEO traps that kill lean startups — and how to avoid them</div>
+
+  <div class="card card-accent-coral">
+    <div class="row">
+      <div class="row-icon coral"><i class="ti ti-alert-triangle" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Trap 1 — Being the best developer in your own company</h4>
+        <p>If you, Suleman, are still writing client code six months from now, your company has not grown — it has just gotten busier. Every hour you code is an hour you are not closing a GHC 25,000 contract. Your ceiling as a coder is your salary. Your ceiling as a CEO who builds a team is unlimited. Choose the ceiling.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon coral"><i class="ti ti-alert-triangle" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Trap 2 — Saying yes to every client</h4>
+        <p>In Ghana's referral-based market, you will be tempted to take any project that offers money. The wrong clients cost more than they pay — they erode your team, delay your real clients, and produce bad case studies. Decline clients who: won't pay 50% upfront, have no clear brief, want to negotiate every invoice, or whose project is outside your sector focus without a premium fee.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon coral"><i class="ti ti-alert-triangle" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Trap 3 — Confusing busyness with progress</h4>
+        <p>A full calendar and a full to-do list are not signs of a healthy startup — they are often signs that the CEO has failed to prioritise. Every Friday, ask: "Did I move the company closer to revenue today, or did I manage tasks?" If it was mostly tasks, Monday needs to be different.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon coral"><i class="ti ti-alert-triangle" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Trap 4 — Avoiding hard conversations with clients</h4>
+        <p>Ghanaian business culture prizes relationships — but relationships do not survive unspoken resentments. If a client is late on payment, call them on day 8, not day 40. If a project is going off-scope, raise a change order immediately. The earlier the hard conversation, the cheaper the resolution. Avoidance is not kindness — it is debt accumulation.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon coral"><i class="ti ti-alert-triangle" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Trap 5 — No systems, all memory</h4>
+        <p>If ALBASA WEB's knowledge lives only in your and Mubarak's heads, you are both irreplaceable — and that is a fragility, not a strength. Every process you do more than twice must be documented in Notion: client onboarding, proposal writing, invoicing, project kickoff, retainer renewal. "We don't have time to document" means "we plan to repeat every mistake." You, as CEO, model this — if you document, your team will document.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="row-icon coral"><i class="ti ti-alert-triangle" aria-hidden="true"></i></div>
+      <div class="row-body">
+        <h4>Trap 6 — Waiting until you feel "ready"</h4>
+        <p>You will never feel ready to raise your prices, decline a bad client, hire your first employee, or pitch a large company. You gather information, make the best decision possible, execute it, and learn from the result. Your PMP methodology is exactly this — you do not wait for a perfect risk register before starting a project. You manage risk in motion.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:.5rem">
+    <div class="lbl">The CEO's one daily question — write it somewhere you see it every morning</div>
+    <p class="pull-quote">"What is the single most important thing I can do today that will make everything else easier or unnecessary?"</p>
+    <p style="font-size:13px;color:var(--color-text-secondary)">Do that first. Then do everything else. This one habit separates CEOs who build companies from founders who stay self-employed.</p>
+  </div>
+</div>
+
+</div><!-- /page-wrap -->
+
+<script>
+function show(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  el.classList.add('active');
+}
+</script>
+</body>
+</html>
